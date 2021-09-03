@@ -81,3 +81,15 @@ h1 {
 .btnRight:hover {
   background-color: #535353;
 }
+
+/*для обработки ошибок*/
+.error-img {
+  margin-left: 35%;
+  margin-top: 20px;
+  max-height: 220px;
+}
+
+.error-text {
+  font-family: 'Ubuntu', sans-serif;
+  text-align: center;
+}
