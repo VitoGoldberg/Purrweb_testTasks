@@ -15,6 +15,16 @@ for (let i = 0; i < slidesArr.length; i++) {
   slidesArr[i].remove();
 }
 
+if (slidesArr.length == 0) {
+
+}
+else if (slidesArr.length > 10) {
+
+}
+else {
+  
+}
+
 //отрисовка dots
 function drawDots() {
   let dot = document.createElement('button');
