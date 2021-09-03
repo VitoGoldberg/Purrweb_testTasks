@@ -128,6 +128,7 @@ if (slidesArr.length == 0) {
 
   let interval = 12; //скорость анимации
   let animation;
+  let state = 0;
 
   function animationSlideLeft() {
     let slides = document.querySelectorAll('.slide');
@@ -168,8 +169,7 @@ if (slidesArr.length == 0) {
         let stop = -800 * (slidesNumber - 1);
         console.log(d);
         if (d == stop) {
-          clearInterval(animation);
-          animation = null;
+          state = false;
           while (animation !== null) {
             animation = null;
           }
