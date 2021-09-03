@@ -7,15 +7,15 @@ let leftBtn = document.querySelector('.btnLeft');//обработчики соб
 let rightBtn = document.querySelector('.btnRight');
 
 
-let slides = document.querySelectorAll('.slide');
+let slidesArr = document.querySelectorAll('.slide');
 let slidesSRC = []; //массив путей всех слайдов
 
 //получаем коллекцию путей и удаляем все слайды
-for (let i = 0; i < slides.length; i++) {
-  slidesSRC[i] = slides[i].src;
-  slides[i].remove();
+for (let i = 0; i < slidesArr.length; i++) {
+  slidesSRC[i] = slidesArr[i].src;
+  slidesArr[i].remove();
 }
-
+console.log(slidesSRC)
 
 //отрисовка dots
 function drawDots() {
@@ -41,9 +41,9 @@ function draw() {
   slide.id = step + 1;
   document.querySelector('#slide').appendChild(slide);
   console.log(slide);
-  dotMarker();
 }
 draw();
+dotMarker();
 
 //соответствие dot - слайд
 function dotMarker() {
@@ -59,26 +59,19 @@ function dotMarker() {
 
 //перелистывание вправо/влево; перемещение слайдов и удаление
 let flippingState = 0; //для обработки попеременного листания влево-вправо(true-false)
-let duration = 3000;
+let duration = 700;
 
 function drawRight() {
   animationSwitch = true;
   
-  let slidesRight = document.querySelectorAll('.slide'),
-    offsetRight = 0;
+  let slides = document.querySelectorAll('.slide'),
+    offset = 0;
     if (flippingState == 0) {
       flippingState = false;
     }
-    if (flippingState == false) {
-      for (let i = 0; i < slidesRight.length; i++) {
-        slidesRight[i].style.left = offsetRight * 780 - 780 + 'px';
-        offsetRight++;
-      }
-    } else {
-      for (let i = 0; i < slidesRight.length; i++) {
-        slidesRight[i].style.left = offsetRight * 780 - 780 + 'px';
-        offsetRight++;
-      }
+    for (let i = 0; i < slides.length; i++) {
+        slidesRight[i].style.left = offset * 780 + 1780 + 'px';
+        offset++;
     }
   setTimeout(() => {
     slidesRight[0].remove();
