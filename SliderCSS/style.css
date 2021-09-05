@@ -68,6 +68,7 @@ h1 {
   justify-content: space-evenly;
   align-items: center;
   margin: auto;
+  background-color: #fff;
 }
 .dot {
   width: 12px;
@@ -78,11 +79,9 @@ h1 {
   cursor: pointer;
 }
 
-.dot:hover {
-  background-color: #535353;
-}
 .btnLeft:hover,
-.btnRight:hover {
+.btnRight:hover,
+.dot:hover {
   background-color: #535353;
 }
 
