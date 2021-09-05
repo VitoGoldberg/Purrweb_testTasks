@@ -12,16 +12,17 @@ let slidesSRC = []; //массив путей всех слайдов
 
 //отрисовка слайдов (также при ошибке)
 let frame = document.querySelector('.slides-container');
-//let slide = document.createElement('img');
+let slideError = document.createElement('img');
 let addErrorText = document.createElement('h2');
 
 //отрисовка слайдов с ошибками (при количестве <0 ; >10)
 function drawError() {
-  let slide = document.createElement('img');
   frame.style.backgroundColor = '#0f794d';
-  slide.classList.add('error-img');
+  frame.style.flexDirection = 'column';
+  frame.style.position = 'relative';
+  slideError.classList.add('error-img');
   addErrorText.classList.add('error-text');
-  frame.appendChild(slide);
+  frame.appendChild(slideError);
   frame.appendChild(addErrorText);
 }
 
@@ -33,12 +34,12 @@ for (let i = 0; i < slidesArr.length; i++) {
 
 if (slidesArr.length == 0) {
   //---Загружено 0 слайдов---//
-  slide.src = 'SliderIMG/errors/error0.svg';
+  slideError.src = 'SliderIMG/errors/error0.svg';
   addErrorText.textContent = 'Это слайдер. Нам нужен минимум 1 слайд.';
   drawError();
 } else if (slidesArr.length > 10) {
   //---Загружено более 10 слайдов---//
-  slide.src = 'SliderIMG/errors/error12.svg';
+  slideError.src = 'SliderIMG/errors/error12.svg';
   addErrorText.textContent = 'Многовато. Загрузите не более 10 слайдов.';
   drawError();
 } else {
@@ -65,10 +66,6 @@ if (slidesArr.length == 0) {
   //соответствие dot - слайд, обновление id dot
   function dotMarker() {
     let dots = document.querySelectorAll('.dot');
-    /*console.log(dots)
-    for (let j = 0; j <= slidesSRC.length; j++) {
-      dots[j].id = 'j + 1';
-    }*/
     let currentSlide = document.querySelector('.slide');
     for (let dot of dots) {
       if (dot.id == currentSlide.id) {
@@ -91,7 +88,6 @@ if (slidesArr.length == 0) {
 
   //--пересчет и расположение слайдов в контейнере--//
   //для переключения flex-direction: контейнера (отрисовка слева или справа)
-
   function calcSlidesDirection() {
     frame.style.removeProperty('flexDirection');
     if (slidesDirection == true) {
@@ -141,12 +137,10 @@ if (slidesArr.length == 0) {
   //--Обработка анимации--//
   let interval = 30; //скорость анимации
   let acceleration; //ускорение анимации
-  //let offsetFrame; //необходимое смещение полосы слайдов
 
   //--Анимация движения--//
   function animationSlides() {
-    //итерация
-    let count = 0;
+    let count = 0;//итерация
     let offsetStep = 10; //смещение за 1 срабатывание
     let stopAnimation = false; //switch на стоп анимации
     let frameWidth = document.querySelector('.slides-container').offsetWidth;
@@ -183,7 +177,6 @@ if (slidesArr.length == 0) {
 
       if (stopAnimation == true) {
         clearInterval(animationPlay);
-        //console.log('stop');
         deleteSlides();
       }
       count++;
@@ -200,7 +193,6 @@ if (slidesArr.length == 0) {
     animationSwitch = false;
     slidesDirection = 0;
     //выравнивание контейнера слайдов в завершение анимации
-    //frame.style.removeProperty('left');
     frame.style.left = 0 + 'px';
     dotMarker();
   }
@@ -236,16 +228,15 @@ if (slidesArr.length == 0) {
   for (let dot of dots) {
     dot.addEventListener('click', () => {
       interval = 18;
-      let currentSlideId = document.querySelector('.slide');
-      dot = Number(dot.id);
-      currentSlideId = Number(currentSlideId.id);
-      console.log(dot, typeof dot);
-      let repeat = Math.abs(currentSlideId - dot);
+      let dotId = Number(dot.id);
+      let currentSlide = document.querySelector('.slide');
+      let currentSlideId = Number(currentSlide.id);
+      let repeat = Math.abs(currentSlideId - dotId);
 
-      if (dot != currentSlideId && animationSwitch == false) {
+      if (dotId != currentSlideId && animationSwitch == false) {
         animationSwitch = true;
 
-        if (dot > currentSlideId) {
+        if (dotId > currentSlideId) {
           slidesDirection = true;
           calcSlidesDirection();
           for (let i = 0; i < repeat; i++) {
@@ -262,9 +253,18 @@ if (slidesArr.length == 0) {
         }
         acceleration = 2;
         animationSlides();
+      }
+    });
 
-        let dots = document.querySelectorAll('.dot');
-        console.log(dots)
+    //hover на dots
+    dot.addEventListener('mouseover', () => {
+      dot.style.backgroundColor = '#535353';
+    });
+    
+    dot.addEventListener('mouseout', () => {
+      let drawingSlide = document.querySelector('.slide')
+      if (dot.id != drawingSlide.id && animationSwitch == false) {
+        dot.style.backgroundColor = '#808080';
       }
     });
   }
