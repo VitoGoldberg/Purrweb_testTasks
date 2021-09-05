@@ -1,40 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Purrweb_slider</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="SliderCSS/normalize.css">
-    <link rel="stylesheet" href="SliderCSS/style.css">
-</head>
-<body>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="SliderCSS/normalize.css" />
+    <link rel="stylesheet" href="SliderCSS/style.css" />
+  </head>
+  <body>
     <h1>Slider</h1>
     <div class="slider">
-        <div class="wrapper">
-            <button class="btnLeft"><img src="SliderIMG/arrow.svg" class="arrow" alt="arrowLeft"></button>
-            <div id="slide">
-                <img src="SliderIMG/slides/1.jpg" class="slide" alt="slide1">
-                <img src="SliderIMG/slides/2.jpg" class="slide" alt="slide2">
-                <img src="SliderIMG/slides/3.jpg" class="slide" alt="slide3">
-                <img src="SliderIMG/slides/4.jpg" class="slide" alt="slide4">
-                <img src="SliderIMG/slides/5.jpg" class="slide" alt="slide5">
-                <img src="SliderIMG/slides/6.jpg" class="slide" alt="slide6">
-                <img src="SliderIMG/slides/7.jpg" class="slide" alt="slide7">
-                <img src="SliderIMG/slides/8.jpg" class="slide" alt="slide8">
-                <img src="SliderIMG/slides/9.jpg" class="slide" alt="slide9">
-                <img src="SliderIMG/slides/10.jpg" class="slide" alt="slide10">
-            </div>
-            <button class="btnRight"><img src="SliderIMG/arrow.svg" class="arrow" alt="arrowRight"></button>
+      <div class="wrapper">
+        <button class="btnLeft">
+          <img src="SliderIMG/arrow.svg" class="arrow" alt="arrowLeft" />
+        </button>
+        <div id="slide">
+          <div class="slides-container">
+                <!--Добавить не более 10 слайдов-->
+            <img src="SliderIMG/slides/1.jpg" class="slide" alt="slide1" />
+            <img src="SliderIMG/slides/2.jpg" class="slide" alt="slide2" />
+            <img src="SliderIMG/slides/3.jpg" class="slide" alt="slide3" />
+            <img src="SliderIMG/slides/4.jpg" class="slide" alt="slide4" />
+            <img src="SliderIMG/slides/5.jpg" class="slide" alt="slide5" />
+            <img src="SliderIMG/slides/6.jpg" class="slide" alt="slide6" />
+            <img src="SliderIMG/slides/7.jpg" class="slide" alt="slide7" />
+            <img src="SliderIMG/slides/8.jpg" class="slide" alt="slide8" />
+            <img src="SliderIMG/slides/9.jpg" class="slide" alt="slide9" />
+            <img src="SliderIMG/slides/10.jpg" class="slide" alt="slide10" />
+          </div>
         </div>
-            <div class="slider_dots-container"></div>
+        <button class="btnRight">
+          <img src="SliderIMG/arrow.svg" class="arrow" alt="arrowRight" />
+        </button>
+      </div>
+      <div class="slider_dots-container"></div>
     </div>
 
     <script src="SliderJS/scriptSlider.js"></script>
-</body>
+  </body>
 </html>
 
 <!--Все используемые изображения взяты из бесплатных открытых интернет-источников.-->

@@ -1,7 +1,8 @@
-let slide; // переменная слайда
+//let slide; // переменная слайда
 let step = 0; //текущий шаг слайдера
 let widthDeterminant = 1; //определение ширины контейнера dots
 let animationSwitch = false; //true во время анимации
+let slidesDirection; //true - для отрисовки справа/слева; ...=row/row-reverse
 
 let leftBtn = document.querySelector('.btnLeft'); //обработчики событий кнопок
 let rightBtn = document.querySelector('.btnRight');
@@ -9,18 +10,19 @@ let rightBtn = document.querySelector('.btnRight');
 let slidesArr = document.querySelectorAll('.slide');
 let slidesSRC = []; //массив путей всех слайдов
 
-//отрисовка слайдов при ошибке
-let errorDisplay = document.querySelector('#slide');
-let errorImg = document.createElement('img');
-let errorText = document.createElement('h2');
+//отрисовка слайдов (также при ошибке)
+let frame = document.querySelector('.slides-container');
+//let slide = document.createElement('img');
+let addErrorText = document.createElement('h2');
 
-//отрисовка слайдов с ошибками ( <0 ; >10)
+//отрисовка слайдов с ошибками (при количестве <0 ; >10)
 function drawError() {
-  errorDisplay.style.backgroundColor = '#0f794d';
-  errorImg.classList.add('error-img');
-  errorText.classList.add('error-text');
-  errorDisplay.appendChild(errorImg);
-  errorDisplay.appendChild(errorText);
+  let slide = document.createElement('img');
+  frame.style.backgroundColor = '#0f794d';
+  slide.classList.add('error-img');
+  addErrorText.classList.add('error-text');
+  frame.appendChild(slide);
+  frame.appendChild(addErrorText);
 }
 
 //получаем коллекцию путей и удаляем все слайды
@@ -30,173 +32,202 @@ for (let i = 0; i < slidesArr.length; i++) {
 }
 
 if (slidesArr.length == 0) {
-  //Загружено 0 слайдов
-  errorImg.src = 'SliderIMG/errors/error0.svg';
-  errorText.textContent = 'Это слайдер. Нам нужен минимум 1 слайд.';
+  //---Загружено 0 слайдов---//
+  slide.src = 'SliderIMG/errors/error0.svg';
+  addErrorText.textContent = 'Это слайдер. Нам нужен минимум 1 слайд.';
   drawError();
 } else if (slidesArr.length > 10) {
-  //Загружено более 10 слайдов
-  errorImg.src = 'SliderIMG/errors/error12.svg';
-  errorText.textContent = 'Многовато. Загрузите не более 10 слайдов.';
+  //---Загружено более 10 слайдов---//
+  slide.src = 'SliderIMG/errors/error12.svg';
+  addErrorText.textContent = 'Многовато. Загрузите не более 10 слайдов.';
   drawError();
 } else {
-  //Нормальная работа слайдера
+  //---Нормальная работа слайдера---//
   //отрисовка dots
   function drawDots() {
     let dot = document.createElement('button');
     dot.classList.add('dot');
     dot.id = widthDeterminant;
-    let dots = document.querySelector('.slider_dots-container');
-    dots.appendChild(dot);
-    dots.style.width = 50 * widthDeterminant + 'px';
+    let dotsContainer = document.querySelector('.slider_dots-container');
+    dotsContainer.appendChild(dot);
+    dotsContainer.style.width = 50 * widthDeterminant + 'px';
   }
 
   //отрисовка слайда
   function draw() {
-    slide = document.createElement('img');
+    let slide = document.createElement('img');
     slide.src = slidesSRC[step];
     slide.classList.add('slide');
     slide.id = step + 1;
-    document.querySelector('#slide').appendChild(slide);
+    frame.appendChild(slide);
   }
 
-  //отрисовка первого кадра и dots при загрузке
+  //соответствие dot - слайд, обновление id dot
+  function dotMarker() {
+    let dots = document.querySelectorAll('.dot');
+    /*console.log(dots)
+    for (let j = 0; j <= slidesSRC.length; j++) {
+      dots[j].id = 'j + 1';
+    }*/
+    let currentSlide = document.querySelector('.slide');
+    for (let dot of dots) {
+      if (dot.id == currentSlide.id) {
+        dot.style.backgroundColor = '#535353';
+      } else {
+        dot.style.backgroundColor = '#808080';
+      }
+    }
+  }
+
+  //отрисовка первого кадра при загрузке
   draw();
+
+  //отрисовка dots при загрузке
   for (let j = 1; j <= slidesSRC.length; j++) {
     drawDots();
     widthDeterminant++;
   }
   dotMarker();
 
-  //соответствие dot - слайд
-  function dotMarker() {
-    let dots = document.querySelectorAll('.dot');
-    for (dot of dots) {
-      if (dot.id == slide.id) {
-        dot.style.backgroundColor = ' #535353';
-      } else {
-        dot.style.backgroundColor = ' #808080';
-      }
+  //--пересчет и расположение слайдов в контейнере--//
+  //для переключения flex-direction: контейнера (отрисовка слева или справа)
+
+  function calcSlidesDirection() {
+    frame.style.removeProperty('flexDirection');
+    if (slidesDirection == true) {
+      frame.style.flexDirection = 'row';
+    } else {
+      frame.style.flexDirection = 'row-reverse';
     }
   }
 
-  //перелистывание вправо/влево; перемещение слайдов и удаление
-  function drawRight() {
-    animationSwitch = true;
+  //назначение слайдам отступов при отрисоке справа/слева
+  function marginOnRight() {
     let slides = document.querySelectorAll('.slide');
-    let offset = 1;
-    for (let i = 0; i < slides.length; i++) {
-      slides[i].style.left = offset * 790 - 790 + 'px';
-      offset++;
+    for (let i = 0; i < slides.length - 1; i++) {
+      slides[i].style.marginRight = 25 + 'px';
     }
   }
 
-  function drawLeft() {
-    animationSwitch = true;
+  function marginOnLeft() {
     let slides = document.querySelectorAll('.slide');
-    let offset = 1;
-    for (let i = 0; i < slides.length; i++) {
-      slides[i].style.right = offset * 790 - 790 + 'px';
-      offset++;
+    for (let i = 0; i < slides.length - 1; i++) {
+      slides[i].style.marginLeft = 25 + 'px';
     }
+    //стартовое смещение рамки со слайдами
+    frame.style.left =
+      -document.querySelector('.slides-container').offsetWidth + 750 + 'px';
   }
 
-  //отрисовка по кнопкам и dots
+  //отрисовка следующих слайдов по кнопкам и dots
   function drawOnRight() {
-    if (animationSwitch == false) {
-      if (step + 1 == slidesSRC.length) {
-        step = 0;
-      } else {
-        step++;
-      }
-      draw();
-      drawRight();
+    if (step + 1 == slidesSRC.length) {
+      step = 0;
+    } else {
+      step++;
     }
+    draw();
   }
 
   function drawOnLeft() {
-    if (animationSwitch == false) {
-      if (step == 0) {
-        step = slidesSRC.length - 1;
+    if (step == 0) {
+      step = slidesSRC.length - 1;
+    } else {
+      step--;
+    }
+    draw();
+  }
+
+  //--Обработка анимации--//
+  let interval = 30; //скорость анимации
+  let acceleration; //ускорение анимации
+  //let offsetFrame; //необходимое смещение полосы слайдов
+
+  //--Анимация движения--//
+  function animationSlides() {
+    //итерация
+    let count = 0;
+    let offsetStep = 10; //смещение за 1 срабатывание
+    let stopAnimation = false; //switch на стоп анимации
+    let frameWidth = document.querySelector('.slides-container').offsetWidth;
+
+    if (slidesDirection == false) {
+      offsetStep = acceleration * offsetStep;
+    } else {
+      offsetStep = -acceleration * offsetStep;
+    }
+
+    animationPlay = setInterval(() => {
+      let drawingOffset = frame.style.left;
+      drawingOffset = drawingOffset.replace('px', '');
+      drawingOffset = Number(drawingOffset);
+
+      calcOffset = offsetStep * count;
+      currentOffset = drawingOffset + calcOffset;
+      frame.style.left = currentOffset + 'px';
+
+      //вычисления момента остановки
+      if (slidesDirection == true) {
+        if (drawingOffset <= -frameWidth + 750) {
+          stopAnimation = true;
+        } else {
+          stopAnimation = false;
+        }
       } else {
-        step--;
+        if (drawingOffset >= 0) {
+          stopAnimation = true;
+        } else {
+          stopAnimation = false;
+        }
       }
-      draw();
-      drawLeft();
-    }
+
+      if (stopAnimation == true) {
+        clearInterval(animationPlay);
+        //console.log('stop');
+        deleteSlides();
+      }
+      count++;
+    }, interval);
   }
 
-  let interval = 12; //скорость анимации
-  let animation;
-  let state = 0;
-
-  function animationSlideLeft() {
+  //удаление всех слайдов, кроме текущего, в конце анимации
+  function deleteSlides() {
     let slides = document.querySelectorAll('.slide');
-    let d = 0;
-    for (let slide of slides) {
-      let r = window.getComputedStyle(slide, null).getPropertyValue('right');
-      r = r.replace('px', '');
-      r = Number(r);
-      let slidesNumber = slides.length;
-      animation = setInterval(() => {
-        slide.style.right = r + d + 'px';
-        d = d - 10;
-        let stop = -800 * (slidesNumber - 1);
-        console.log(d);
-        if (d == stop) {
-          clearInterval(animation);
-          for (let i = 0; i < slidesNumber - 1; i++) {
-            slides[i].remove();
-          }
-          slides[slidesNumber - 1].style.removeProperty('right');
-          animationSwitch = false;
-        }
-      }, interval);
+    for (let i = 0; i < slides.length - 1; i++) {
+      slides[i].remove();
     }
+    //включение возможности следующей анимации слайдера
+    animationSwitch = false;
+    slidesDirection = 0;
+    //выравнивание контейнера слайдов в завершение анимации
+    //frame.style.removeProperty('left');
+    frame.style.left = 0 + 'px';
+    dotMarker();
   }
 
-  function animationSlideRight() {
-    let slides = document.querySelectorAll('.slide');
-    let d = 0;
-    for (let slide of slides) {
-      let l = window.getComputedStyle(slide, null).getPropertyValue('left');
-      l = l.replace('px', '');
-      l = Number(l);
-      let slidesNumber = slides.length;
-      animation = setInterval(() => {
-        slide.style.left = l + d + 'px';
-        d = d - 10;
-        let stop = -800 * (slidesNumber - 1);
-        console.log(d);
-        if (d == stop) {
-          state = false;
-          while (animation !== null) {
-            animation = null;
-          }
-          for (let i = 0; i < slidesNumber - 1; i++) {
-            slides[i].remove();
-          }
-          slides[slidesNumber - 1].style.removeProperty('left');
-          animationSwitch = false;
-        }
-      }, interval);
-    }
-  }
-
+  //--Обработчики нажатия элементов управления--//
   //Обработчики нажатия кнопок R/L
   rightBtn.addEventListener('click', () => {
     if (animationSwitch == false && slidesSRC.length != 1) {
+      animationSwitch = true;
+      slidesDirection = true;
+      calcSlidesDirection();
       drawOnRight();
-      animationSlideRight();
-      dotMarker();
+      marginOnRight();
+      acceleration = 1.5;
+      animationSlides();
     }
   });
 
   leftBtn.addEventListener('click', () => {
     if (animationSwitch == false && slidesSRC.length != 1) {
+      animationSwitch = true;
+      slidesDirection = false;
+      calcSlidesDirection();
       drawOnLeft();
-      animationSlideLeft();
-      dotMarker();
+      marginOnLeft();
+      acceleration = 1.5;
+      animationSlides();
     }
   });
 
@@ -204,40 +235,37 @@ if (slidesArr.length == 0) {
   let dots = document.querySelectorAll('.dot');
   for (let dot of dots) {
     dot.addEventListener('click', () => {
-      let repeat;
-      interval = 20;
-      if (dot.id != slide.id && animationSwitch == false) {
-        if (dot.id > slide.id) {
-          repeat = dot.id - slide.id;
+      interval = 18;
+      let currentSlideId = document.querySelector('.slide');
+      dot = Number(dot.id);
+      currentSlideId = Number(currentSlideId.id);
+      console.log(dot, typeof dot);
+      let repeat = Math.abs(currentSlideId - dot);
+
+      if (dot != currentSlideId && animationSwitch == false) {
+        animationSwitch = true;
+
+        if (dot > currentSlideId) {
+          slidesDirection = true;
+          calcSlidesDirection();
           for (let i = 0; i < repeat; i++) {
-            step++;
-            draw();
-            drawRight();
+            drawOnRight();
           }
-          animationSlideRight();
-          animationSwitch == false;
+          marginOnRight();
         } else {
-          repeat = slide.id - dot.id;
+          slidesDirection = false;
+          calcSlidesDirection();
           for (let i = 0; i < repeat; i++) {
-            step--;
-            draw();
-            drawLeft();
+            drawOnLeft();
           }
-          animationSlideLeft();
-          animationSwitch == false;
+          marginOnLeft();
         }
-        centr();
-        dotMarker();
+        acceleration = 2;
+        animationSlides();
+
+        let dots = document.querySelectorAll('.dot');
+        console.log(dots)
       }
     });
-  }
-
-  //выравнивание слайда в завершение анимации
-  function centr() {
-    let slides = document.querySelectorAll('.slide');
-    for (let item of slides) {
-      item.style.removeProperty('left');
-      item.style.removeProperty('right');
-    }
   }
 }

@@ -24,11 +24,16 @@ h1 {
   border-radius: 8px;
   background-color: #808080;
   position: relative;
-  /*overflow: hidden;*/
+  overflow: hidden;
 }
-.slide {
+.slides-container {
+  max-height: 300px;
   position: absolute;
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
 }
+
 
 .btnLeft,
 .btnRight {
@@ -63,7 +68,6 @@ h1 {
   justify-content: space-evenly;
   align-items: center;
   margin: auto;
-  /*border: 1px crimson solid;*/
 }
 .dot {
   width: 12px;
@@ -88,7 +92,6 @@ h1 {
   margin-top: 20px;
   max-height: 220px;
 }
-
 .error-text {
   font-family: 'Ubuntu', sans-serif;
   text-align: center;
